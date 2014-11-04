@@ -1,0 +1,2 @@
+sudo docker run -i -t -p 6080:6080 docker-ubuntu-lxde-novnc
+
