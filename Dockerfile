@@ -1,26 +1,26 @@
-FROM ubuntu:14.04
 MAINTAINER Mark McCahill <mccahill@duke.edu>
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV HOME /root
 
 # setup our Ubuntu sources (ADD breaks caching)
-RUN echo "deb http://gb.archive.ubuntu.com/ubuntu/ trusty main\n\
-deb http://gb.archive.ubuntu.com/ubuntu/ trusty multiverse\n\
-deb http://gb.archive.ubuntu.com/ubuntu/ trusty universe\n\
-deb http://gb.archive.ubuntu.com/ubuntu/ trusty restricted\n\
-deb http://security.ubuntu.com/ubuntu trusty-security main restricted\n\
-deb http://security.ubuntu.com/ubuntu trusty-security universe\n\
-deb http://security.ubuntu.com/ubuntu trusty-security multiverse\n\
+RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main restricted universe multiverse\n\
+deb http://archive.ubuntu.com/ubuntu trusty-updates main restricted universe multiverse\n\
+deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse\n\ 
+deb http://security.ubuntu.com/ubuntu trusty-security main restricted universe multiverse \n\
 "> /etc/apt/sources.list
 
 # no Upstart or DBus
 # https://github.com/dotcloud/docker/issues/1724#issuecomment-26294856
-RUN apt-mark hold initscripts udev plymouth mountall
-RUN dpkg-divert --local --rename --add /sbin/initctl && ln -sf /bin/true /sbin/initctl
-
+#RUN apt-mark hold initscripts udev plymouth mountall
+#RUN dpkg-divert --local --rename --add /sbin/initctl && ln -sf /bin/true /sbin/initctl
+RUN dpkg-divert --local --rename /usr/bin/ischroot && ln -sf /bin/true /usr/bin/ischroot
 RUN apt-get update \
-    && apt-get install -y --force-yes --no-install-recommends supervisor \
+    && apt-get upgrade -y
+
+RUN apt-get install -y python-numpy
+RUN apt-get install -y software-properties-common wget
+RUN apt-get install -y --force-yes --no-install-recommends supervisor \
         openssh-server pwgen sudo vim-tiny \
         net-tools \
         lxde x11vnc xvfb \
@@ -29,7 +29,6 @@ RUN apt-get update \
     && apt-get autoclean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/*
-
 
 RUN mkdir /etc/startup.aux/
 RUN echo "#Dummy" > /etc/startup.aux/00.sh
@@ -63,8 +62,6 @@ RUN cp -r /openbox-config/.config ~ubuntu/
 RUN chown -R ubuntu ~ubuntu/.config ; chgrp -R ubuntu ~ubuntu/.config
 
 # java install
-RUN apt-get update
-RUN apt-get install -y --force-yes software-properties-common wget
 RUN add-apt-repository ppa:webupd8team/java
 RUN apt-get update
 # say yes to the oracle license agreement
@@ -77,7 +74,5 @@ RUN apt-get install -y --force-yes oracle-java8-set-default
 # eclipse IDE
 RUN apt-get install -y desktop-file-utils
 RUN apt-get install -y eclipse
-
-
 
 ENTRYPOINT ["/startup.sh"]
