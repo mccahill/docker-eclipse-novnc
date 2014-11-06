@@ -102,7 +102,7 @@ else
 fi
 
 echo "Starting webserver and WebSockets proxy on port ${PORT}"
-${HERE}/websockify --web ${WEB} ${CERT:+--cert ${CERT}} ${PORT} ${VNC_DEST} &
+${HERE}/websockify --web ${WEB} ${CERT:+--cert ${CERT}} ${PORT} ${VNC_DEST} --ssl-only &
 proxy_pid="$!"
 sleep 1
 if ! ps -p ${proxy_pid} >/dev/null; then
@@ -112,7 +112,7 @@ if ! ps -p ${proxy_pid} >/dev/null; then
 fi
 
 echo -e "\n\nNavigate to this URL:\n"
-echo -e "    http://$(hostname):${PORT}/vnc.html?host=$(hostname)&port=${PORT}\n"
+echo -e "    https://$(hostname):${PORT}/vnc.html?host=$(hostname)&port=${PORT}\n"
 echo -e "Press Ctrl-C to exit\n\n"
 
 wait ${proxy_pid}

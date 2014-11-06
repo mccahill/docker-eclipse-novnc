@@ -1,3 +1,4 @@
+FROM ubuntu:14.04
 MAINTAINER Mark McCahill <mccahill@duke.edu>
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -36,8 +37,6 @@ RUN chmod +x /etc/startup.aux/00.sh
 RUN mkdir -p /etc/supervisor/conf.d
 RUN rm /etc/supervisor/supervisord.conf
 
-ADD noVNC /noVNC/
-
 ADD openbox-config /openbox-config
 # create an ubuntu user
 #PASS=`pwgen -c -n -1 10`
@@ -45,12 +44,6 @@ ADD openbox-config /openbox-config
 #echo "User: ubuntu Pass: $PASS"
 RUN useradd --create-home --shell /bin/bash --user-group --groups adm,sudo ubuntu
 RUN echo "ubuntu:badpassword" | chpasswd
-
-# store a password for the VNC service
-RUN mkdir /home/root
-RUN mkdir /home/root/.vnc
-RUN x11vnc -storepasswd foobar /home/root/.vnc/passwd
-
 
 ADD startup.sh /
 ADD supervisord.conf /etc/supervisor/
@@ -74,5 +67,12 @@ RUN apt-get install -y --force-yes oracle-java8-set-default
 # eclipse IDE
 RUN apt-get install -y desktop-file-utils
 RUN apt-get install -y eclipse
+
+# noVNC
+ADD noVNC /noVNC/
+# store a password for the VNC service
+RUN mkdir /home/root
+RUN mkdir /home/root/.vnc
+RUN x11vnc -storepasswd foobar /home/root/.vnc/passwd
 
 ENTRYPOINT ["/startup.sh"]
