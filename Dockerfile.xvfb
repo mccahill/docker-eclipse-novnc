@@ -26,8 +26,7 @@ RUN apt-get install -y --force-yes --no-install-recommends supervisor \
         net-tools \
         lxde x11vnc xvfb \
         gtk2-engines-murrine ttf-ubuntu-font-family \
-        firefox \
-        xserver-xorg-video-dummy \
+        libreoffice firefox \
     && apt-get autoclean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/*
@@ -47,7 +46,7 @@ RUN useradd --create-home --shell /bin/bash --user-group --groups adm,sudo ubunt
 RUN echo "ubuntu:badpassword" | chpasswd
 
 ADD startup.sh /
-ADD supervisord.conf.xorg /etc/supervisor/supervisord.conf
+ADD supervisord.conf.xvfb /etc/supervisor/supervisord.conf
 EXPOSE 6080
 EXPOSE 5900
 EXPOSE 22
@@ -75,6 +74,5 @@ ADD noVNC /noVNC/
 RUN mkdir /home/root
 RUN mkdir /home/root/.vnc
 RUN x11vnc -storepasswd foobar /home/root/.vnc/passwd
-ADD xorg.conf /
 
 ENTRYPOINT ["/startup.sh"]

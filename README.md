@@ -24,7 +24,20 @@ the CA signed cert, because it looks like the cert is passed on the command line
 and you can exceed the command line max length or something. This is a problem for Firefox
 which wants to see the entire signing chain for certs issued by Commodo.
 
- 
+
+Xvfb vs XDummy/Xorg
+-------------------
+There are two approaches that can be taken to set up a virtual framebuffer for the VNC
+server. The Dockerfile.xvfb build will create a container that uses the ancient and venerable
+Xvfb approach, while the Dockerfile.xorg creates a container the sets up an Xdummy framebuffer
+in Xorg. For the Xorg approach, we also need to set up the xorg.conf config file so you might 
+want take a look at the settings there.
+
+The reason for considering the Xorg approach over Xvfb is Xorg+Xdummy support the randr 
+dynamcic screen resizing functions so there are fewer warnings thrown by apps like firefox,
+and someday we might get clever about resizing on the fly, or take advantage of GLX extnesions.
+See https://www.xpra.org/trac/wiki/Xdummy for details.
+
 
 Extending
 ---------
