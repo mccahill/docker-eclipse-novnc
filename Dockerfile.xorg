@@ -76,6 +76,6 @@ ADD noVNC /noVNC/
 RUN mkdir /home/root
 RUN mkdir /home/root/.vnc
 RUN x11vnc -storepasswd foobar /home/root/.vnc/passwd
-ADD xorg.conf /
+ADD xorg.conf /etc/X11/xorg.conf
 
 ENTRYPOINT ["/startup.sh"]

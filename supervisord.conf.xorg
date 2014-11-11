@@ -16,7 +16,7 @@ stopsignal=QUIT
 [program:Xorg]
 priority=10
 directory=/
-command=/usr/bin/Xorg +extension GLX +extension RANDR +extension RENDER  -config /xorg.conf :1 
+command=/usr/bin/Xorg +extension GLX +extension RANDR +extension RENDER  -config /etc/X11/xorg.conf :1 
 user=root
 autostart=true
 autorestart=true
