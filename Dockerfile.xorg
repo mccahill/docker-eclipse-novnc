@@ -13,9 +13,8 @@ deb http://security.ubuntu.com/ubuntu trusty-security main restricted universe m
 
 # no Upstart or DBus
 # https://github.com/dotcloud/docker/issues/1724#issuecomment-26294856
-#RUN apt-mark hold initscripts udev plymouth mountall
-#RUN dpkg-divert --local --rename --add /sbin/initctl && ln -sf /bin/true /sbin/initctl
-RUN dpkg-divert --local --rename /usr/bin/ischroot && ln -sf /bin/true /usr/bin/ischroot
+RUN apt-mark hold initscripts udev plymouth mountall
+RUN dpkg-divert --local --rename --add /sbin/initctl && ln -sf /bin/true /sbin/initctl
 RUN apt-get update \
     && apt-get upgrade -y
 
@@ -26,7 +25,7 @@ RUN apt-get install -y --force-yes --no-install-recommends supervisor \
         net-tools \
         lxde x11vnc xvfb \
         gtk2-engines-murrine ttf-ubuntu-font-family \
-        firefox \
+        libreoffice firefox \
         xserver-xorg-video-dummy \
     && apt-get autoclean \
     && apt-get autoremove \
@@ -55,6 +54,7 @@ WORKDIR /
 RUN cp -r /openbox-config/.config ~ubuntu/
 RUN chown -R ubuntu ~ubuntu/.config ; chgrp -R ubuntu ~ubuntu/.config
 
+############ being Eclipse stuff ###############
 # java install
 RUN add-apt-repository ppa:webupd8team/java
 RUN apt-get update
@@ -68,6 +68,7 @@ RUN apt-get install -y --force-yes oracle-java8-set-default
 # eclipse IDE
 RUN apt-get install -y desktop-file-utils
 RUN apt-get install -y eclipse
+############ end Eclipse stuff ###############
 
 # noVNC
 ADD noVNC /noVNC/
