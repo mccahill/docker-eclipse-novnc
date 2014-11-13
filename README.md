@@ -1,29 +1,53 @@
-docker-ubuntu-lxde-novnc
+docker-eclipse-novnc
 =========================
 
 
-Build yourself
+Build it yourself with the command
 ```
-sudo docker build -t docker-ubuntu-lxde-novnc .
+sudo docker build -t docker-eclipse-novnc .
 ```
+Note that this assumes you have already created a self.pem certificate 
+in the noVNC directory, because we want to force secure connections 
+(via https and wss) between the user's web browser and the container. 
+See the "Encrypted noVNC Sessions" section below for details on how to
+set up the site certificate.
 
 Run
 ```
-sudo docker run -i -t -p 6080:6080 docker-ubuntu-lxde-novnc
+sudo docker run -i -t -p 6080:6080 -h your.hostname.here docker-eclipse-novnc
 ```
+You need to specify the hostname to the container so that it matches the
+site certificate that you configured noVNC with, or pedantic web browsers will
+frighten users with scary warnings. 
 
-Browse http://127.0.0.1:6080/vnc.html
+Browse to
+    https://your.hostname.here:6080/vnc.html
+or
+    https://your.hostname.here:6080/vnc_auto.html
 
-Securing
---------
-To enable encrypted connections, you need to create a noVNC self.pem
-certificate file, and the private key should ideally be signed by a known
-certificate authority. Note that you will run into trouble if you include the
-entire CA signing chain - self.pem should only have the private key and
-the CA signed cert, because it looks like the cert is passed on the command line to websocify,
-and you can exceed the command line max length or something. This is a problem for Firefox
-which wants to see the entire signing chain for certs issued by Commodo.
+You will be prompted for the vnc password which was set to 'foobar' in the
+Dockerfile build. You'll probably want to change that and also change the 
+hardcoded password ('badpassword') for the ubuntu account that is created 
+in the build process  ;-)
 
+Encrypted noVNC Sessions
+------------------------
+To enable encrypted connections, you need to (at a minimum) create a 
+noVNC self.pem certificate file as describe here: 
+   https://github.com/kanaka/websockify/wiki/Encrypted-Connections
+
+Even better, get your private key signed by a known certificate authority,
+so that users are not confronted with frightening warnings about untrusted sites. 
+
+Note that you may run into trouble if you include the entire CA signing 
+chain if you use a CA such as Commodo (at least on Chrome and Safari) so I 
+have been running with self.pem containner only the private key and the 
+CA signed cert. But Firefox seems to want to see the entire signing chain for certs issued 
+by Commodo, or something. So - some work is still needed to get Firefox
+to behave, but Safari and Chrome seem to work.
+
+PROTIP: make sure that the read permissions are set to only allow root to read the
+self.pem file, since you probably don't want users to get access to the private key.
 
 Xvfb vs XDummy/Xorg
 -------------------
@@ -38,6 +62,14 @@ dynamcic screen resizing functions so there are fewer warnings thrown by apps li
 and someday we might get clever about resizing on the fly, or take advantage of GLX extnesions.
 See https://www.xpra.org/trac/wiki/Xdummy for details.
 
+You'll need to copy Dockerfile.xvfb or Dockerfile.xorg to Dockerfile to build the appropriate
+version for your situation.
+
+Misc Notes
+----------
+The file openbox-config/.config is used to put some reasonable default settings in place for 
+the X environment when run inside a web browser - such as placing the dock at the top of the
+page so users don't have to scroll their web page to find it.
 
 Extending
 ---------

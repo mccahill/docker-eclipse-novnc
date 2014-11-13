@@ -37,12 +37,14 @@ RUN chmod +x /etc/startup.aux/00.sh
 RUN mkdir -p /etc/supervisor/conf.d
 RUN rm /etc/supervisor/supervisord.conf
 
-ADD openbox-config /openbox-config
 # create an ubuntu user
 #PASS=`pwgen -c -n -1 10`
 #PASS=ubuntu
 #echo "User: ubuntu Pass: $PASS"
-RUN useradd --create-home --shell /bin/bash --user-group --groups adm,sudo ubuntu
+#RUN useradd --create-home --shell /bin/bash --user-group --groups adm,sudo ubuntu
+
+# create an ubuntu user who cannot sudo
+RUN useradd --create-home --shell /bin/bash --user-group ubuntu
 RUN echo "ubuntu:badpassword" | chpasswd
 
 ADD startup.sh /
@@ -50,9 +52,13 @@ ADD supervisord.conf.xorg /etc/supervisor/supervisord.conf
 EXPOSE 6080
 EXPOSE 5900
 EXPOSE 22
-WORKDIR /
+
+ADD openbox-config /openbox-config
 RUN cp -r /openbox-config/.config ~ubuntu/
 RUN chown -R ubuntu ~ubuntu/.config ; chgrp -R ubuntu ~ubuntu/.config
+RUN rm -r /openbox-config
+
+WORKDIR /
 
 ############ being Eclipse stuff ###############
 # java install
