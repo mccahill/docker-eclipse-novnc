@@ -36,6 +36,11 @@ Dockerfile build. You'll probably want to change that and also change the
 hardcoded password ('badpassword') for the ubuntu account created 
 in the build process by specifying passwords when you run the container.
 
+Note that the user can skip the VNC password prompt if you redirect them to 
+
+ https://your.host.here:6080/vnc.html?&encrypt=1&autoconnect=1&password=foobar
+
+
 Encrypted noVNC Sessions
 ------------------------
 To enable encrypted connections, you need to (at a minimum) create a 
