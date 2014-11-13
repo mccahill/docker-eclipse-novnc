@@ -1,2 +1,3 @@
-sudo docker run -i -t -p 6080:6080 -h colab-sbx-241.oit.duke.edu docker-ubuntu-lxde-novnc
+sudo docker run -i -t -p 6080:6080 -e UBUNTUPASS=meow -e VNCPASS=mousey -h colab-sbx-241.oit.duke.edu docker-eclipse-novnc
+
 

@@ -1,7 +1,6 @@
 docker-eclipse-novnc
 =========================
 
-
 Build it yourself with the command
 ```
 sudo docker build -t docker-eclipse-novnc .
@@ -12,9 +11,16 @@ in the noVNC directory, because we want to force secure connections
 See the "Encrypted noVNC Sessions" section below for details on how to
 set up the site certificate.
 
-Run
+Run using the default password from the Dockerfile build script:
 ```
 sudo docker run -i -t -p 6080:6080 -h your.hostname.here docker-eclipse-novnc
+```
+
+Better yet, run and set the passwords for VNC and user via environment variables:
+
+```
+sudo docker run -i -t -p 6080:6080 -e UBUNTUPASS=supersecret -e VNCPASS=secret \
+   -h your.hostname.here docker-eclipse-novnc
 ```
 You need to specify the hostname to the container so that it matches the
 site certificate that you configured noVNC with, or pedantic web browsers will
@@ -27,8 +33,8 @@ or
 
 You will be prompted for the vnc password which was set to 'foobar' in the
 Dockerfile build. You'll probably want to change that and also change the 
-hardcoded password ('badpassword') for the ubuntu account that is created 
-in the build process  ;-)
+hardcoded password ('badpassword') for the ubuntu account created 
+in the build process by specifying passwords when you run the container.
 
 Encrypted noVNC Sessions
 ------------------------
@@ -68,8 +74,8 @@ version for your situation.
 Misc Notes
 ----------
 The file openbox-config/.config is used to put some reasonable default settings in place for 
-the X environment when run inside a web browser - such as placing the dock at the top of the
-page so users don't have to scroll their web page to find it.
+the X environment when run inside a web browser. Reasonable means things like placing the dock 
+at the top of the page so users don't have to scroll their web page to find it.
 
 Extending
 ---------
