@@ -1,15 +1,16 @@
 docker-eclipse-novnc
 =========================
 
-Build it yourself with the command
-```
-sudo docker build -t docker-eclipse-novnc .
-```
-Note that this assumes you have already created a self.pem certificate 
-in the noVNC directory, because we want to force secure connections 
+First cd to the noVNC directory and create a self.pem certificate 
+for noVNC because we want to force secure connections 
 (via https and wss) between the user's web browser and the container. 
 See the "Encrypted noVNC Sessions" section below for details on how to
 set up the site certificate.
+
+After you have a cert in self.pem, build the container with the command
+```
+sudo docker build -t docker-eclipse-novnc .
+```
 
 Run using the default password from the Dockerfile build script:
 ```
