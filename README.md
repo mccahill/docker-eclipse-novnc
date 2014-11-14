@@ -84,7 +84,7 @@ in Xorg. For the Xorg approach, we also need to set up the xorg.conf config file
 want take a look at the settings there.
 
 The reason for considering the Xorg approach over Xvfb is Xorg+Xdummy support the randr 
-dynamcic screen resizing functions so there are fewer warnings thrown by apps like firefox,
+dynamic screen resizing functions so there are fewer warnings thrown by apps like firefox,
 and someday we might get clever about resizing on the fly, or take advantage of GLX extnesions.
 See https://www.xpra.org/trac/wiki/Xdummy for details.
 
