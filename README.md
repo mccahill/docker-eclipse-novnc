@@ -1,8 +1,22 @@
 docker-eclipse-novnc
 =========================
 
+What is this?
+-------------
+This project is an example of how a Docker container can be
+run on headless servers to provide access to XWindow apps to anyone with
+an HTML5 capable web browser. In this case, we are running the Eclipse IDE and
+OpenBox, OpenOffice, and Firefox in the container.
+
+To embed the app in a web page, we use VNC for remote access to X via x11vnc and noVNC.
+NoVNC uses web sockets and client-side javascript to provide a zero install VNC 
+client run inside the user's web browser. Both Xvfb and Xorg/Xdummy are supported so
+you can run the container on headless servers.
+
+How to build 
+------------
 First cd to the noVNC directory and create a self.pem certificate 
-for noVNC because we want to force secure connections 
+for noVNC. This is necessary because we want to force secure connections 
 (via https and wss) between the user's web browser and the container. 
 See the "Encrypted noVNC Sessions" section below for details on how to
 set up the site certificate.
@@ -17,7 +31,7 @@ Run using the default password from the Dockerfile build script:
 sudo docker run -i -t -p 6080:6080 -h your.hostname.here docker-eclipse-novnc
 ```
 
-Better yet, run and set the passwords for VNC and user via environment variables:
+Better yet, run and set the passwords for VNC and user via environment variables like this:
 
 ```
 sudo docker run -i -t -p 6080:6080 -e UBUNTUPASS=supersecret -e VNCPASS=secret \
@@ -27,7 +41,7 @@ You need to specify the hostname to the container so that it matches the
 site certificate that you configured noVNC with, or pedantic web browsers will
 frighten users with scary warnings. 
 
-Browse to
+TO access the app, point your web browser at
     https://your.hostname.here:6080/vnc.html
 or
     https://your.hostname.here:6080/vnc_auto.html
